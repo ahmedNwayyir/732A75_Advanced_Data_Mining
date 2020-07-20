@@ -1,0 +1,144 @@
+---
+title: |
+  | Advanced Data Mining
+  | Lab 1: Clustering
+author: |
+  | Group 08
+  | Mohsen Pirmoradiyan, Ahmed Alhasan
+date: \today
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+header-includes: \usepackage{xcolor}
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## SimpleKmeans
+Apply "SimpleKMeans" to your data. In Weka euclidian distance is implemented in SimpleKmeans. You can set the number of clusters and seed of a random algorithm for generating initial cluster centers. Experiment with the algorithm as follows:
+
+1. Choose a set of attributes for clustering and give a motivation. (**Hint**: always ignore attribute "name". Why does the name attribute need to be ignored?)
+
+\definecolor{myblue}{HTML}{00007D}
+- \textcolor{myblue}{Chosing a single attribute will yield the best cluster separation as we get the least within cluster sum of squared errors, however the result clusters only separate the food in regard to low-high values of that attribute and does not show the relation with other attributes.} \newline 
+\textcolor{myblue}{For example using only Calcium will result in the lowest within cluster sum of squared errors and that is mainly because ot an outlier}
+
+\begin{flushleft}
+    \includegraphics[width=300px]{Data/Calcium.jpg}
+\end{flushleft}
+
+\begin{flushleft}
+    \includegraphics[width=500px]{Data/Calcium Plot.jpg}
+\end{flushleft}
+
+\newpage
+- \textcolor{myblue}{Choosing two attributes we get less seperation in general, however there are some clustering patterns to be noticed for example choosing Energy and Fat will result in a well seperated clusters due to their correlation even better than some single attribute clustering i.e. Iron. The resulted clusters from Energy-Fat describe how high Fat food is also high with Energy}
+
+\begin{flushleft}
+    \includegraphics[width=500px]{Data/Plot Matrix.jpg}
+\end{flushleft}
+
+\begin{flushleft}
+    \includegraphics[width=300px]{Data/Energy-Fat.jpg}
+\end{flushleft}
+
+\begin{flushleft}
+    \includegraphics[width=500px]{Data/Energy-Fat Plot.jpg}
+\end{flushleft}
+
+\newpage
+- \textcolor{myblue}{Choosing more attributes for clustering will yield a worse separation and meaningless clustering, as we can see with choosing all the 5 attributes where we get the highest within cluster sum of squared errors (worst separation)} \newline 
+\textcolor{myblue}{Also we can see that some attributes like Protein and Iron have their centroids are exactly the same or close to each other.}
+
+\begin{flushleft}
+    \includegraphics[width=300px]{Data/All.jpg}
+\end{flushleft}
+
+- \textcolor{myblue}{The name attribute is agnored because it is categorical and K means clustering is based on numerical euclidean distance}
+
+
+2. Experiment with at least two different numbers of clusters, e.g. 2 and 5, but with the same seed value 10.
+- \textcolor{myblue}{Increasing the number of clusters will result in a better separation until we reach a cluster per single point.}
+
+Two Clusters
+\begin{flushleft}
+    \includegraphics[width=300px]{Data/2 clusters.jpg}
+\end{flushleft}
+
+\begin{flushleft}
+    \includegraphics[width=500px]{Data/2 clusters plot.jpg}
+\end{flushleft}
+
+Five Clusters
+\begin{flushleft}
+    \includegraphics[width=300px]{Data/5 clusters.jpg}
+\end{flushleft}
+
+\begin{flushleft}
+    \includegraphics[width=500px]{Data/5 clusters plot.jpg}
+\end{flushleft}
+
+3. Then try with a different seed value, i.e. different initial cluster centers. Compare the results with the previous results. Explain what the seed value controls.
+- \textcolor{myblue}{Changing the seed value will change the starting guess for the centroid and it mainly affects the number of iterations required to converge and to a lesser extent the final result after convergence.}
+
+Using seed = 4 with 2 clusters of 2 attributes 
+\begin{flushleft}
+    \includegraphics[width=500px]{Data/seed 4.jpg}
+\end{flushleft}
+
+Using seed = 4 with 5 clusters of 2 attributes 
+\begin{flushleft}
+    \includegraphics[width=500px]{Data/seed 4 with 5 clusters.jpg}
+\end{flushleft}
+
+4. Do you think the clusters are "good" clusters? (Are all of its members "similar" to each other? Are members from different clusters dissimilar?)
+- \textcolor{myblue}{Depending on the size of the clusters, the smaller the sizes the more similar its members but we need to define a sweet spot for dissimilarity.}
+
+5. What does each cluster represent? Choose one of the results. Make up labels (words or phrases in English) which characterize each cluster.
+- \textcolor{myblue}{As explained in the first point, the cluster representation depends on which attributes being selected, the more attributes selected the more meaningless the clusters become.}
+\newline
+
+- \textcolor{myblue}{Adding more attributes will affect the centroids positions and the number of instances belong to each cluster, for example when using all the attributes we get 9 instances in cluster-0 with high-energy high-fat low-calcium foods and 18 instances in cluster-1 with low-energy low-fat high-calcium while iron and protein are the same in both clusters.}
+
+Seed = 10, Clusters = 2, Attributes = All except Names
+\begin{flushleft}
+    \includegraphics[width=300px]{Data/all clusters.jpg}
+\end{flushleft}
+
+
+- \textcolor{myblue}{Clustering Energy-Fat into two clusters is good choice for clustering and will result in cluster-0 with high-energy high-fat foods and cluster-1 with low-energy low-fat foods.}
+
+Seed = 10, Clusters = 2, Attributes = Energy & Fat
+\begin{flushleft}
+    \includegraphics[width=300px]{Data/clusters 01.jpg}
+\end{flushleft}
+
+\begin{flushleft}
+    \includegraphics[width=500px]{Data/Energy-Fat Plot.jpg}
+\end{flushleft}
+
+
+\newpage
+## MakeDensityBasedClusters
+Now with MakeDensityBasedClusters, SimpleKMeans is turned into a denstiy-based clusterer. You can set the minimum standard deviation for normal density calculation. Experiment with the algorithm as the follows:
+
+1. Use the SimpleKMeans clusterer which gave the result you haven chosen in 5).
+2. Experiment with at least two different standard deviations. Compare the results. (**Hint**: Increasing the standard deviation to higher values will make the differences in different runs more obvious and thus it will be easier to conclude what the parameter does)
+- \textcolor{myblue}{Working on the same clustering from point 1.5 and using different standard deviations 1 and 1000 we can see that increasing sd will increase the cluster influence to a wider range of points and the cluster with a higher prior probability will have more instances.}
+
+- \textcolor{myblue}{As we can see below cluster-1 have all the inctances when we increased the standard deviation to 1000 since it has the higher prior.}
+
+sd= 1
+\begin{flushleft}
+    \includegraphics[width=300px]{Data/sd1.jpg}
+\end{flushleft}
+
+\newpage
+sd= 1000
+\begin{flushleft}
+    \includegraphics[width=300px]{Data/sd1000.jpg}
+\end{flushleft}
+
+- \textcolor{myblue}{We can see that the density based clusters are the same as k mean clusters when sd = 1 but when sd = 1000 all instances will be inside cluster-1 because it has the higher prior probability.}
